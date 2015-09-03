@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">QuickAlphaPost</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="fetch_button">Fetch Posts</string>
+
     <string name="action_settings">Settings</string>
 </resources>

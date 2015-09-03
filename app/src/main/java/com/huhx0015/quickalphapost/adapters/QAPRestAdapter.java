@@ -2,6 +2,10 @@ package com.huhx0015.quickalphapost.adapters;
 
 import android.util.Log;
 import com.huhx0015.quickalphapost.interfaces.QAPApiInterface;
+import com.huhx0015.quickalphapost.models.Post;
+
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -33,11 +37,14 @@ public class QAPRestAdapter {
         QAPApiInterface apiRequest = restAdapter.create(QAPApiInterface.class);
 
         // TODO: Finish later.
-        apiRequest.getLatestPosts(null, new Callback<String>() {
+        apiRequest.getLatestPosts("", new Callback<List<Post>>() {
 
             @Override
-            public void success(String s, Response response) {
+            public void success(List<Post> posts, Response response) {
+
                 Log.d(LOG_TAG, "Request successful: " + response);
+
+                Log.d(LOG_TAG, "Post Sample 0 Description: " + posts.get(0).getDescription());
             }
 
             @Override
