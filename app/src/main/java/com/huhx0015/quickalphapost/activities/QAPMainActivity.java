@@ -1,9 +1,11 @@
-package com.huhx0015.quickalphapost;
+package com.huhx0015.quickalphapost.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.huhx0015.quickalphapost.R;
 
 public class QAPMainActivity extends AppCompatActivity {
 
@@ -12,7 +14,8 @@ public class QAPMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.qap_main_activity);
+
+        setupLayout();
     }
 
     /** ACTIVITY EXTENSION METHODS _____________________________________________________________ **/
@@ -39,5 +42,11 @@ public class QAPMainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /** LAYOUT METHODS _________________________________________________________________________ **/
+
+    private void setupLayout() {
+        setContentView(R.layout.qap_main_activity);
     }
 }
