@@ -1,28 +1,49 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class Datum {
 
+    @SerializedName("created_at")
+    @Expose
     private String createdAt;
+    @SerializedName("num_stars")
+    @Expose
     private int numStars;
+    @SerializedName("num_replies")
+    @Expose
     private int numReplies;
+    @Expose
     private Source source;
+    @Expose
     private String text;
+    @SerializedName("num_reposts")
+    @Expose
     private int numReposts;
+    @Expose
     private String id;
+    @SerializedName("canonical_url")
+    @Expose
     private String canonicalUrl;
+    @Expose
     private Entities entities;
+    @Expose
     private String html;
+    @SerializedName("machine_only")
+    @Expose
     private boolean machineOnly;
+    @Expose
     private User user;
+    @SerializedName("thread_id")
+    @Expose
     private String threadId;
+    @SerializedName("pagination_id")
+    @Expose
     private String paginationId;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -274,14 +295,6 @@ public class Datum {
      */
     public void setPaginationId(String paginationId) {
         this.paginationId = paginationId;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

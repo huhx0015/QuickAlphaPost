@@ -1,29 +1,44 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class User {
 
+    @Expose
     private String username;
+    @SerializedName("avatar_image")
+    @Expose
     private AvatarImage avatarImage;
+    @Expose
     private Description description;
+    @Expose
     private String locale;
+    @SerializedName("created_at")
+    @Expose
     private String createdAt;
+    @SerializedName("canonical_url")
+    @Expose
     private String canonicalUrl;
+    @SerializedName("cover_image")
+    @Expose
     private CoverImage coverImage;
+    @Expose
     private String timezone;
+    @Expose
     private Counts counts;
+    @Expose
     private String type;
+    @Expose
     private String id;
+    @Expose
     private String name;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     *
+     * 
      * @return
      *     The username
      */
@@ -32,7 +47,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param username
      *     The username
      */
@@ -41,7 +56,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The avatarImage
      */
@@ -50,7 +65,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param avatarImage
      *     The avatar_image
      */
@@ -59,7 +74,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The description
      */
@@ -68,7 +83,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param description
      *     The description
      */
@@ -77,7 +92,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The locale
      */
@@ -86,7 +101,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param locale
      *     The locale
      */
@@ -95,7 +110,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The createdAt
      */
@@ -104,7 +119,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param createdAt
      *     The created_at
      */
@@ -113,7 +128,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The canonicalUrl
      */
@@ -122,7 +137,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param canonicalUrl
      *     The canonical_url
      */
@@ -131,7 +146,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The coverImage
      */
@@ -140,7 +155,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param coverImage
      *     The cover_image
      */
@@ -149,7 +164,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The timezone
      */
@@ -158,7 +173,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param timezone
      *     The timezone
      */
@@ -167,7 +182,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The counts
      */
@@ -176,7 +191,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param counts
      *     The counts
      */
@@ -185,7 +200,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The type
      */
@@ -194,7 +209,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param type
      *     The type
      */
@@ -203,7 +218,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The id
      */
@@ -212,7 +227,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param id
      *     The id
      */
@@ -221,7 +236,7 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @return
      *     The name
      */
@@ -230,20 +245,12 @@ public class User {
     }
 
     /**
-     *
+     * 
      * @param name
      *     The name
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

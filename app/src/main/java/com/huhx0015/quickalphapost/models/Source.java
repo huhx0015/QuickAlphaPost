@@ -1,17 +1,20 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class Source {
 
+    @Expose
     private String link;
+    @Expose
     private String name;
+    @SerializedName("client_id")
+    @Expose
     private String clientId;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -65,14 +68,6 @@ public class Source {
      */
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

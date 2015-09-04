@@ -1,17 +1,18 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
 public class Hashtag {
 
+    @Expose
     private String name;
+    @Expose
     private int len;
+    @Expose
     private int pos;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -65,14 +66,6 @@ public class Hashtag {
      */
     public void setPos(int pos) {
         this.pos = pos;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

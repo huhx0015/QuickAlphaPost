@@ -2,18 +2,19 @@
 package com.huhx0015.quickalphapost.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
 public class Entities {
 
+    @Expose
     private List<Object> mentions = new ArrayList<Object>();
-    private List<Object> hashtags = new ArrayList<Object>();
+    @Expose
+    private List<Hashtag> hashtags = new ArrayList<Hashtag>();
+    @Expose
     private List<Link> links = new ArrayList<Link>();
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -38,7 +39,7 @@ public class Entities {
      * @return
      *     The hashtags
      */
-    public List<Object> getHashtags() {
+    public List<Hashtag> getHashtags() {
         return hashtags;
     }
 
@@ -47,7 +48,7 @@ public class Entities {
      * @param hashtags
      *     The hashtags
      */
-    public void setHashtags(List<Object> hashtags) {
+    public void setHashtags(List<Hashtag> hashtags) {
         this.hashtags = hashtags;
     }
 
@@ -67,14 +68,6 @@ public class Entities {
      */
     public void setLinks(List<Link> links) {
         this.links = links;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

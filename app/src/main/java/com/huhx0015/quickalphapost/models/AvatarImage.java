@@ -1,21 +1,25 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class AvatarImage {
 
+    @Expose
     private String url;
+    @Expose
     private int width;
+    @SerializedName("is_default")
+    @Expose
     private boolean isDefault;
+    @Expose
     private int height;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     *
+     * 
      * @return
      *     The url
      */
@@ -24,7 +28,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @param url
      *     The url
      */
@@ -33,7 +37,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @return
      *     The width
      */
@@ -42,7 +46,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @param width
      *     The width
      */
@@ -51,7 +55,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @return
      *     The isDefault
      */
@@ -60,7 +64,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @param isDefault
      *     The is_default
      */
@@ -69,7 +73,7 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @return
      *     The height
      */
@@ -78,20 +82,12 @@ public class AvatarImage {
     }
 
     /**
-     *
+     * 
      * @param height
      *     The height
      */
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

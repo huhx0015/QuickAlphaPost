@@ -6,44 +6,30 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import com.huhx0015.quickalphapost.constants.QAPConstants;
 import com.huhx0015.quickalphapost.connection.QAPConnectivity;
-import com.huhx0015.quickalphapost.interfaces.OnRecyclerViewUpdateListener;
-import com.huhx0015.quickalphapost.ui.QAPListAdapter;
+import com.huhx0015.quickalphapost.ui.QAPRecyclerAdapter;
 import com.huhx0015.quickalphapost.R;
-import com.huhx0015.quickalphapost.interfaces.QAPApiInterface;
-import com.huhx0015.quickalphapost.models.AlphaPost;
+import com.huhx0015.quickalphapost.interfaces.RetrofitInterface;
 import com.huhx0015.quickalphapost.models.Datum;
 import com.squareup.okhttp.OkHttpClient;
-
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
-public class QAPMainActivity extends AppCompatActivity implements OnRecyclerViewUpdateListener {
+public class QAPMainActivity extends AppCompatActivity {
 
     /** CLASS VARIABLES ________________________________________________________________________ **/
 
-    // API VARIABLES
-    private final static String BASE_URL = "https://api.app.net";
-
     // ASYNCTASK VARIABLES
-    private QAPQueryTask task; // References the AsyncTask.
-
-    // LAYOUT VARIABLES
-    private QAPListAdapter recyclerAdapter;
+    private QAPQueryTask queryTask; // References the AsyncTask.
 
     // LIST VARIABLES
     private List<Datum> postListResult;
@@ -56,73 +42,45 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
     @Bind(R.id.qap_recycler_view) RecyclerView alphaRecyclerView;
     @Bind(R.id.qap_progress_indicator) ProgressBar progressIndicator;
 
-    /** ACTIVITY METHODS _______________________________________________________________________ **/
+    /** ACTIVITY LIFECYCLE METHODS _____________________________________________________________ **/
 
+    // onCreate(): The first method that is run when the activity is created.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Checks to see if there is a saved instance that was saved prior, from events such as
-        // rotation changes.
-        if (savedInstanceState != null) {
-            // TODO: Add values for restoring saved instance values on rotation.
+        setupLayout(); // Sets up the layout for the activity.
+    }
+
+    // onStop(): This method runs when the screen is no longer visible.
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // If the AsyncTask is still running in the background, it is cancelled at this point.
+        if (null != queryTask) {
+            if (queryTask.getStatus() == AsyncTask.Status.RUNNING) {
+                queryTask.cancel(true); // Cancels the AsyncTask operation.
+                Log.d(LOG_TAG, "onStop(): AsyncTask has been cancelled.");
+            }
         }
-
-        setupLayout();
     }
-
-    /** ACTIVITY EXTENSION METHODS _____________________________________________________________ **/
-
-    // Inflate the menu; this adds items to the action bar if it is present.
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        //getMenuInflater().inflate(R.menu.qap_main_activity, menu);
-        return true;
-    }
-
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    // onSaveInstanceState(): Called to retrieve per-instance state from an activity before being
-    // killed so that the state can be restored in onCreate() or onRestoreInstanceState().
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-
-        // Saves current state values into the instance. These values are restored upon re-creation
-        // of the activity.
-        // TODO: Add items to save here before screen orientation calls.
-
-        // Always calls the superclass, so it can save the view hierarchy state.
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
 
     /** LAYOUT METHODS _________________________________________________________________________ **/
 
+    // setupLayout(): Sets up the layout for the activity.
     private void setupLayout() {
 
         setContentView(R.layout.qap_main_activity); // Sets the XML layout for the activity.
         ButterKnife.bind(this); // ButterKnife view injection initialization.
 
-        setupButtons();
+        setupButtons(); // Sets up the listeners for the buttons.
     }
 
+    // setupButtons(): Sets up the listeners for the buttons.
     private void setupButtons() {
 
+        // FETCH BUTTON:
         fetchButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -131,14 +89,14 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
                 Log.d(LOG_TAG, "onClick(): Fetch button pressed.");
 
                 // ASYNCTASK INITIALIZATION:
-                task = new QAPQueryTask();
-                task.execute(); // Executes the AsyncTask.
+                queryTask = new QAPQueryTask();
+                queryTask.execute(); // Executes the AsyncTask.
             }
         });
     }
 
     // updateView(): Updates the layout view after the QAPsQueryTask has completed.
-    public void updateView(Boolean postsRetrieved) {
+    private void updateView(Boolean postsRetrieved) {
 
         progressIndicator.setVisibility(View.GONE); // Hides the progress indicator object.
 
@@ -146,70 +104,60 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
         // successful.
         if (postsRetrieved) {
             setUpRecyclerView(); // Sets up the RecyclerView object.
-            setListAdapter(postListResult); // Sets the adapter for the RecyclerView object.
+            setRecyclerList(postListResult); // Sets the adapter for the RecyclerView object.
         }
     }
 
     /** RECYCLERVIEW METHODS ___________________________________________________________________ **/
-
-    private void setListAdapter(List<Datum> postList){
-        recyclerAdapter = new QAPListAdapter(postList, this);
-        alphaRecyclerView.setAdapter(recyclerAdapter);
-    }
 
     private void setUpRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         alphaRecyclerView.setLayoutManager(layoutManager);
     }
 
-    /** REST ADAPTER METHODS ___________________________________________________________________ **/
-
-    public void retrieveLatestPosts() {
-
-        //postListResult = new ArrayList<>(); // Initializes the ArrayList.
-
-        // Builds a new RestAdapter instance.
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(BASE_URL)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setClient(new OkClient(new OkHttpClient()))
-                .build();
-
-        QAPApiInterface apiRequest = restAdapter.create(QAPApiInterface.class);
-
-        apiRequest.getLatestPosts(new Callback<AlphaPost>() {
-
-            @Override
-            public void success(AlphaPost alphaPost, Response response) {
-                postListResult = alphaPost.getData();
-                updateView(true);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(LOG_TAG, "Request failed: " + error);
-            }
-        });
+    private void setRecyclerList(List<Datum> postList){
+        QAPRecyclerAdapter recyclerAdapter = new QAPRecyclerAdapter(postList, this);
+        alphaRecyclerView.setAdapter(recyclerAdapter);
     }
 
-    /** INTERFACE METHODS ______________________________________________________________________ **/
+    /** RETROFIT METHODS _______________________________________________________________________ **/
 
-    // updateRecyclerView(): Updates the RecyclerView object.
-    @Override
-    public void updateRecyclerView() {
+    // retrieveLatestPosts(): Builds a RetrofitAdapter for retrieving the latest global posts via
+    // Rest API request.
+    private void retrieveLatestPosts() {
 
-        if (recyclerAdapter != null) {
-            recyclerAdapter.notifyDataSetChanged();
+        // Builds a new RetrofitAdapter instance.
+        Retrofit retrofitAdapter = new Retrofit.Builder()
+                .baseUrl(QAPConstants.BASE_URL)
+                .client(new OkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Sets the interface for the Retrofit adapter.
+        RetrofitInterface apiRequest = retrofitAdapter.create(RetrofitInterface.class);
+
+        // Attempts to execute the Rest API request to retrieve the latest posts.
+        try {
+            postListResult = apiRequest.getLatestPosts().execute().body().getData();
+        }
+
+        // I/O Exception handler.
+        catch (IOException e) {
+            Log.e(LOG_TAG, "retrieveLatestPosts(): Exception occurred while trying to retrieve posts: " + e);
+            e.printStackTrace();
         }
     }
 
     /** SUBCLASSES _____________________________________________________________________________ **/
 
+    // QAPQueryTask(): An AsyncTask that runs in the background to process the network calls for
+    // retrieving the latest global posts.
     public class QAPQueryTask extends AsyncTask<Void, Void, Void> {
 
         /** SUBCLASS VARIABLES _________________________________________________________________ **/
 
         Boolean isConnected = false; // Used to determine if the device has Internet connectivity.
+        Boolean isError = false; // Used to determine if an error was encountered while processing the task.
 
         /** ASYNCTASK METHODS __________________________________________________________________ **/
 
@@ -231,21 +179,24 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
             // Checks the device's current network and Internet connectivity state.
             isConnected = QAPConnectivity.checkConnectivity(QAPMainActivity.this);
 
+            // If connected to the Internet, this AsyncTask attempts to retrieve the latest global
+            // posts.
             if (isConnected) {
 
                 try {
-
-                    Log.d(LOG_TAG, "QAPQueryTask(): Beginning Quick Alpha Post query...");
-                    retrieveLatestPosts(); // Retrieves the posts from the rest adapter.
+                    Log.d(LOG_TAG, "QAPQueryTask(): Retrieving latest global posts...");
+                    retrieveLatestPosts(); // Retrieves the posts from the Retrofit adapter.
                 }
 
                 // Exception error handler.
                 catch (Exception e) {
-                    Log.e(LOG_TAG, "doInBackground: An error was encountered during Spotify API access: " + e);
+                    isError = true; // Indicates an error has occurred.
+                    Log.e(LOG_TAG, "QAPQueryTask(): An exception error occurred: " + e);
                 }
             }
 
             else {
+                isError = true; // Indicates an error has occurred.
                 Toast.makeText(QAPMainActivity.this, "Your device is not connected to the Internet. Please check your settings and try again.", Toast.LENGTH_SHORT).show();
             }
 
@@ -257,6 +208,23 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            // If the AsyncTask was not cancelled, the recycler view is updated, as long as there
+            // were no errors with the request.
+            if (!isCancelled()) {
+
+                // Runs on the UI thread.
+                runOnUiThread(new Runnable() {
+
+                    // Updates the layout view, as long as an error was not encountered.
+                    public void run() {
+
+                        if (!isError) {
+                            updateView(true);
+                        }
+                    }
+                });
+            }
         }
     }
 }

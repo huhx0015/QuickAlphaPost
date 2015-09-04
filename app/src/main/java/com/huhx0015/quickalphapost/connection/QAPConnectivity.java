@@ -7,7 +7,9 @@ import android.util.Log;
 import java.net.InetAddress;
 
 /**
+ *
  * Created by Michael Yoon Huh on 9/3/2015.
+ *
  */
 public class QAPConnectivity {
 

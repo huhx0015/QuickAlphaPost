@@ -1,17 +1,18 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
 public class Description {
 
+    @Expose
     private String text;
+    @Expose
     private String html;
+    @Expose
     private Entities_ entities;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -65,14 +66,6 @@ public class Description {
      */
     public void setEntities(Entities_ entities) {
         this.entities = entities;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

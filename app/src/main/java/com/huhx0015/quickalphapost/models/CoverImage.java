@@ -1,18 +1,22 @@
 
 package com.huhx0015.quickalphapost.models;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
 public class CoverImage {
 
+    @Expose
     private String url;
+    @Expose
     private int width;
+    @SerializedName("is_default")
+    @Expose
     private boolean isDefault;
+    @Expose
     private int height;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
@@ -84,14 +88,6 @@ public class CoverImage {
      */
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }
