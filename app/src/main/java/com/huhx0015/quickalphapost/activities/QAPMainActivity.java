@@ -11,14 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import com.huhx0015.quickalphapost.QAPListAdapter;
+import android.widget.Toast;
+
+import com.huhx0015.quickalphapost.connection.QAPConnectivity;
+import com.huhx0015.quickalphapost.interfaces.OnRecyclerViewUpdateListener;
+import com.huhx0015.quickalphapost.ui.QAPListAdapter;
 import com.huhx0015.quickalphapost.R;
 import com.huhx0015.quickalphapost.interfaces.QAPApiInterface;
 import com.huhx0015.quickalphapost.models.AlphaPost;
 import com.huhx0015.quickalphapost.models.Datum;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -26,7 +29,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class QAPMainActivity extends AppCompatActivity {
+public class QAPMainActivity extends AppCompatActivity implements OnRecyclerViewUpdateListener {
 
     /** CLASS VARIABLES ________________________________________________________________________ **/
 
@@ -35,6 +38,9 @@ public class QAPMainActivity extends AppCompatActivity {
 
     // ASYNCTASK VARIABLES
     private QAPQueryTask task; // References the AsyncTask.
+
+    // LAYOUT VARIABLES
+    private QAPListAdapter recyclerAdapter;
 
     // LIST VARIABLES
     private List<Datum> postListResult;
@@ -121,7 +127,6 @@ public class QAPMainActivity extends AppCompatActivity {
 
                 Log.d(LOG_TAG, "onClick(): Fetch button pressed.");
 
-                // TODO: Implement action here.
                 // ASYNCTASK INITIALIZATION:
                 task = new QAPQueryTask();
                 task.execute(); // Executes the AsyncTask.
@@ -130,14 +135,13 @@ public class QAPMainActivity extends AppCompatActivity {
     }
 
     // updateView(): Updates the layout view after the QAPsQueryTask has completed.
-    private void updateView(Boolean postsRetrieved) {
+    public void updateView(Boolean postsRetrieved) {
 
         progressIndicator.setVisibility(View.GONE); // Hides the progress indicator object.
 
         // Sets the list adapter for the RecyclerView object if the posts' data retrieval was
         // successful.
         if (postsRetrieved) {
-
             setUpRecyclerView(); // Sets up the RecyclerView object.
             setListAdapter(postListResult); // Sets the adapter for the RecyclerView object.
         }
@@ -146,8 +150,8 @@ public class QAPMainActivity extends AppCompatActivity {
     /** RECYCLERVIEW METHODS ___________________________________________________________________ **/
 
     private void setListAdapter(List<Datum> postList){
-        QAPListAdapter adapter = new QAPListAdapter(postList, this);
-        alphaRecyclerView.setAdapter(adapter);
+        recyclerAdapter = new QAPListAdapter(postList, this);
+        alphaRecyclerView.setAdapter(recyclerAdapter);
     }
 
     private void setUpRecyclerView() {
@@ -157,10 +161,9 @@ public class QAPMainActivity extends AppCompatActivity {
 
     /** REST ADAPTER METHODS ___________________________________________________________________ **/
 
-    // TODO: Finish implementation of this method.
     public void retrieveLatestPosts() {
 
-        postListResult = new ArrayList<>(); // Initializes the ArrayList.
+        //postListResult = new ArrayList<>(); // Initializes the ArrayList.
 
         // Builds a new RestAdapter instance.
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -173,11 +176,8 @@ public class QAPMainActivity extends AppCompatActivity {
 
             @Override
             public void success(AlphaPost alphaPost, Response response) {
-
-
                 postListResult = alphaPost.getData();
                 updateView(true);
-//                Log.d(LOG_TAG, "Post Sample 0 Post Text Test: " + alphaPost.getData().get(0).getText());
             }
 
             @Override
@@ -185,9 +185,17 @@ public class QAPMainActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "Request failed: " + error);
             }
         });
+    }
 
+    /** INTERFACE METHODS ______________________________________________________________________ **/
 
+    // updateRecyclerView(): Updates the RecyclerView object.
+    @Override
+    public void updateRecyclerView() {
 
+        if (recyclerAdapter != null) {
+            recyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     /** SUBCLASSES _____________________________________________________________________________ **/
@@ -196,6 +204,7 @@ public class QAPMainActivity extends AppCompatActivity {
 
         /** SUBCLASS VARIABLES _________________________________________________________________ **/
 
+        Boolean isConnected = false; // Used to determine if the device has Internet connectivity.
         Boolean isError = false; // Used to determine if an error has occurred or not.
         Boolean postsRetrieved = false; // Used to determine if post retrieval was successful or not.
 
@@ -216,35 +225,44 @@ public class QAPMainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            try {
+            // Checks the device's current network and Internet connectivity state.
+            isConnected = QAPConnectivity.checkConnectivity(QAPMainActivity.this);
 
-                Log.d(LOG_TAG, "QAPQueryTask(): Beginning Quick Alpha Post query...");
+            if (isConnected) {
 
-                // Retrieves the posts from the rest adapter.
-                retrieveLatestPosts();
+                try {
 
-                // If the postListResult object is null, it indicates an error has occurred and
-                // that the retrieval of the list of posts was a failure.
-                if (postListResult == null) {
-                    isError = true;
-                    postsRetrieved = false;
-                    Log.e(LOG_TAG, "ERROR: QAPQueryTask(): The post list result was invalid.");
+                    Log.d(LOG_TAG, "QAPQueryTask(): Beginning Quick Alpha Post query...");
+
+                    retrieveLatestPosts(); // Retrieves the posts from the rest adapter.
+
+                    // If the postListResult object is null, it indicates an error has occurred and
+                    // that the retrieval of the list of posts was a failure.
+                    if (postListResult == null) {
+                        isError = true;
+                        postsRetrieved = false;
+                        Log.e(LOG_TAG, "ERROR: QAPQueryTask(): The post list result was invalid.");
+                    }
+
+                    // Indicates that the retrieval of the posts was a failure.
+                    else if (postListResult.size() < 1) {
+                        postsRetrieved = false;
+                    }
+
+                    // Otherwise, the retrieval of the list of posts was successful.
+                    else {
+                        postsRetrieved = true;
+                    }
                 }
 
-                // Indicates that the retrieval of the posts was a failure.
-                else if (postListResult.size() < 1) {
-                    postsRetrieved = false;
-                }
-
-                // Otherwise, the retrieval of the list of posts was successful.
-                else {
-                    postsRetrieved = true;
+                // Exception error handler.
+                catch (Exception e) {
+                    Log.e(LOG_TAG, "doInBackground: An error was encountered during Spotify API access: " + e);
                 }
             }
 
-            // Exception error handler.
-            catch (Exception e) {
-                Log.e(LOG_TAG, "doInBackground: An error was encountered during Spotify API access: " + e);
+            else {
+                Toast.makeText(QAPMainActivity.this, "Your device is not connected to the Internet. Please check your settings and try again.", Toast.LENGTH_SHORT).show();
             }
 
             return null;
@@ -255,19 +273,6 @@ public class QAPMainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            if (!isCancelled()) {
-
-                // Runs on the UI thread.
-                runOnUiThread(new Runnable() {
-
-                    // Updates the layout view.
-                    public void run() {
-                        updateView(postsRetrieved);
-                    }
-                });
-            }
         }
     }
-
 }

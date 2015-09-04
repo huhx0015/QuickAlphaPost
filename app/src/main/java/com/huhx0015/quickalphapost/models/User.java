@@ -23,7 +23,7 @@ public class User {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     * 
+     *
      * @return
      *     The username
      */
@@ -32,7 +32,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param username
      *     The username
      */
@@ -41,7 +41,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The avatarImage
      */
@@ -50,7 +50,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param avatarImage
      *     The avatar_image
      */
@@ -59,7 +59,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The description
      */
@@ -68,7 +68,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param description
      *     The description
      */
@@ -77,7 +77,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The locale
      */
@@ -86,7 +86,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param locale
      *     The locale
      */
@@ -95,7 +95,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The createdAt
      */
@@ -104,7 +104,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param createdAt
      *     The created_at
      */
@@ -113,7 +113,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The canonicalUrl
      */
@@ -122,7 +122,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param canonicalUrl
      *     The canonical_url
      */
@@ -131,7 +131,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The coverImage
      */
@@ -140,7 +140,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param coverImage
      *     The cover_image
      */
@@ -149,7 +149,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The timezone
      */
@@ -158,7 +158,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param timezone
      *     The timezone
      */
@@ -167,7 +167,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The counts
      */
@@ -176,7 +176,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param counts
      *     The counts
      */
@@ -185,7 +185,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The type
      */
@@ -194,7 +194,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param type
      *     The type
      */
@@ -203,7 +203,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The id
      */
@@ -212,7 +212,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param id
      *     The id
      */
@@ -221,7 +221,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @return
      *     The name
      */
@@ -230,7 +230,7 @@ public class User {
     }
 
     /**
-     * 
+     *
      * @param name
      *     The name
      */

@@ -15,7 +15,7 @@ public class AvatarImage {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     * 
+     *
      * @return
      *     The url
      */
@@ -24,7 +24,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @param url
      *     The url
      */
@@ -33,7 +33,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @return
      *     The width
      */
@@ -42,7 +42,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @param width
      *     The width
      */
@@ -51,7 +51,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @return
      *     The isDefault
      */
@@ -60,7 +60,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @param isDefault
      *     The is_default
      */
@@ -69,7 +69,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @return
      *     The height
      */
@@ -78,7 +78,7 @@ public class AvatarImage {
     }
 
     /**
-     * 
+     *
      * @param height
      *     The height
      */
