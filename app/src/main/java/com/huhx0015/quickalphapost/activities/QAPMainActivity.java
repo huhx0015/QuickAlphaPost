@@ -20,6 +20,8 @@ import com.huhx0015.quickalphapost.R;
 import com.huhx0015.quickalphapost.interfaces.QAPApiInterface;
 import com.huhx0015.quickalphapost.models.AlphaPost;
 import com.huhx0015.quickalphapost.models.Datum;
+import com.squareup.okhttp.OkHttpClient;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 public class QAPMainActivity extends AppCompatActivity implements OnRecyclerViewUpdateListener {
@@ -168,6 +171,8 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
         // Builds a new RestAdapter instance.
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(BASE_URL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(new OkHttpClient()))
                 .build();
 
         QAPApiInterface apiRequest = restAdapter.create(QAPApiInterface.class);
@@ -205,8 +210,6 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
         /** SUBCLASS VARIABLES _________________________________________________________________ **/
 
         Boolean isConnected = false; // Used to determine if the device has Internet connectivity.
-        Boolean isError = false; // Used to determine if an error has occurred or not.
-        Boolean postsRetrieved = false; // Used to determine if post retrieval was successful or not.
 
         /** ASYNCTASK METHODS __________________________________________________________________ **/
 
@@ -233,26 +236,7 @@ public class QAPMainActivity extends AppCompatActivity implements OnRecyclerView
                 try {
 
                     Log.d(LOG_TAG, "QAPQueryTask(): Beginning Quick Alpha Post query...");
-
                     retrieveLatestPosts(); // Retrieves the posts from the rest adapter.
-
-                    // If the postListResult object is null, it indicates an error has occurred and
-                    // that the retrieval of the list of posts was a failure.
-                    if (postListResult == null) {
-                        isError = true;
-                        postsRetrieved = false;
-                        Log.e(LOG_TAG, "ERROR: QAPQueryTask(): The post list result was invalid.");
-                    }
-
-                    // Indicates that the retrieval of the posts was a failure.
-                    else if (postListResult.size() < 1) {
-                        postsRetrieved = false;
-                    }
-
-                    // Otherwise, the retrieval of the list of posts was successful.
-                    else {
-                        postsRetrieved = true;
-                    }
                 }
 
                 // Exception error handler.
