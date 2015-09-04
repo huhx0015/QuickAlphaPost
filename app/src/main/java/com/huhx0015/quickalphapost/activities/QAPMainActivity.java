@@ -14,8 +14,11 @@ import android.widget.ProgressBar;
 import com.huhx0015.quickalphapost.QAPListAdapter;
 import com.huhx0015.quickalphapost.R;
 import com.huhx0015.quickalphapost.interfaces.QAPApiInterface;
-import com.huhx0015.quickalphapost.models.Post;
+import com.huhx0015.quickalphapost.models.AlphaPost;
+import com.huhx0015.quickalphapost.models.Datum;
 import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -34,7 +37,7 @@ public class QAPMainActivity extends AppCompatActivity {
     private QAPQueryTask task; // References the AsyncTask.
 
     // LIST VARIABLES
-    private ArrayList<Post> postListResult = new ArrayList<>();
+    private List<Datum> postListResult;
 
     // LOGGING VARIABLES
     private static final String LOG_TAG = QAPMainActivity.class.getSimpleName();
@@ -142,7 +145,7 @@ public class QAPMainActivity extends AppCompatActivity {
 
     /** RECYCLERVIEW METHODS ___________________________________________________________________ **/
 
-    private void setListAdapter(ArrayList<Post> postList){
+    private void setListAdapter(List<Datum> postList){
         QAPListAdapter adapter = new QAPListAdapter(postList, this);
         alphaRecyclerView.setAdapter(adapter);
     }
@@ -166,17 +169,15 @@ public class QAPMainActivity extends AppCompatActivity {
 
         QAPApiInterface apiRequest = restAdapter.create(QAPApiInterface.class);
 
-        // TODO: Finish later.
-        apiRequest.getLatestPosts(new Callback<ArrayList<Post>>() {
+        apiRequest.getLatestPosts(new Callback<AlphaPost>() {
 
             @Override
-            public void success(ArrayList<Post> posts, Response response) {
+            public void success(AlphaPost alphaPost, Response response) {
 
-                Log.d(LOG_TAG, "Request successful: " + response);
 
-                Log.d(LOG_TAG, "Post Sample 0 Post Text Test: " + posts.get(0).getDatum().getText());
-
-                postListResult = posts; // Sets the post list results;
+                postListResult = alphaPost.getData();
+                updateView(true);
+//                Log.d(LOG_TAG, "Post Sample 0 Post Text Test: " + alphaPost.getData().get(0).getText());
             }
 
             @Override
@@ -184,6 +185,9 @@ public class QAPMainActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, "Request failed: " + error);
             }
         });
+
+
+
     }
 
     /** SUBCLASSES _____________________________________________________________________________ **/

@@ -1,8 +1,8 @@
 package com.huhx0015.quickalphapost.interfaces;
 
-import com.huhx0015.quickalphapost.models.Post;
+import com.huhx0015.quickalphapost.models.AlphaPost;
 import com.huhx0015.quickalphapost.models.User;
-import java.util.ArrayList;
+
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -12,11 +12,15 @@ import retrofit.http.Path;
  */
 public interface QAPApiInterface {
 
-    // TODO: Need to analyze JSON structure for post retrieval
     @GET("/posts/stream/global")
-    void getLatestPosts(Callback<ArrayList<Post>> callback);
+    void getLatestPosts(Callback<AlphaPost> callback);
+
+    @GET("files/{file_id}")
+    void getFile(@Path("file_id") String file_id, Callback<String> callback);
 
     @GET("/users/{user_id}/posts")
     void getUser(@Path("user_id") String user_id, Callback<User> callback);
 
+    @GET("users/{user_id}/avatar")
+    void getUserAvatar(@Path("user_id") String user_id, Callback<String> callback);
 }

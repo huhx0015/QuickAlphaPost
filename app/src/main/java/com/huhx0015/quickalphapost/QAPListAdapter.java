@@ -3,14 +3,17 @@ package com.huhx0015.quickalphapost;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.huhx0015.quickalphapost.models.Post;
+
+import com.huhx0015.quickalphapost.models.Datum;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Michael Yoon Huh on 9/3/2015.
@@ -24,7 +27,7 @@ public class QAPListAdapter extends RecyclerView.Adapter<QAPListAdapter.ListView
     private Activity activity; // References the attached activity.
 
     // LIST VARIABLES
-    private ArrayList<Post> postList; // References the ArrayList of Post objects.
+    private List<Datum> postList;
 
     // LOGGING VARIABLES
     private static final String LOG_TAG = QAPListAdapter.class.getSimpleName();
@@ -32,7 +35,7 @@ public class QAPListAdapter extends RecyclerView.Adapter<QAPListAdapter.ListView
     /** INITIALIZATION METHODS _________________________________________________________________ **/
 
     // QAPListAdapter(): Constructor method.
-    public QAPListAdapter(ArrayList<Post> list, Activity act){
+    public QAPListAdapter(List<Datum> list, Activity act){
         this.activity = act;
         this.postList = list;
     }
@@ -57,12 +60,21 @@ public class QAPListAdapter extends RecyclerView.Adapter<QAPListAdapter.ListView
     public void onBindViewHolder(ListViewHolder holder, int position) {
 
         // Sets the TextView objects.
-        holder.userNameText.setText(postList.get(position).getDatum().getUser().getName());
-        holder.postDescriptionText.setText(postList.get(position).getDatum().getText());
-        holder.timeText.setText(postList.get(position).getDatum().getCreatedAt());
+        holder.userNameText.setText(postList.get(position).getUser().getName());
+        holder.postDescriptionText.setText(postList.get(position).getText());
+        holder.timeText.setText(postList.get(position).getCreatedAt());
 
         // Retrieves the avatar image URL at the referenced position.
-        String avatarImage = postList.get(position).getDatum().getUser().getAvatarImage().getUrl();
+        String avatarImage = null;
+
+        try {
+            avatarImage = postList.get(position).getUser().getAvatarImage().getUrl();
+        }
+
+        catch (NullPointerException e) {
+            //Log.d(LOG_TAG, "User ID: " + postList.get(position).getUser().getAvatarImage().toString());
+            Log.e(LOG_TAG, "onBindViewHolder(): Null pointer exception encountered while attempting to retrieve the avatar image URL.");
+        }
 
         // Loads the referenced image into the ImageView object.
         if (avatarImage != null) {

@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Example {
+public class AlphaPost {
 
     private Meta meta;
     private List<Datum> data = new ArrayList<Datum>();
