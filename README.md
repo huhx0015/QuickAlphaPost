@@ -9,3 +9,10 @@ DEVELOPER: huhx0015
 ## Description
 
 A simple Android application that displays the latest global posts from Alpha by App.net. This demo project demonstrates the use of RecyclerViews, CardViews, and RetroFit 2.0.
+
+## Resources
+
+### Libraries
+
+* Picasso: http://square.github.io/picasso/
+* Retrofit 2: http://square.github.io/retrofit/
